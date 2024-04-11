@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artigo 002</title>
-  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
+
 <body>
   <div class="center">
     <div class="header">
@@ -14,10 +16,92 @@
       </h1>
     </div>
     <div class="user">
-      <input type="text" value="Usuario">
-      <input type="text" value="Senha">
-      <button>Entrar</button>
+      <form onsubmit="logar(event)">
+        <input type="text" id="usuario" name="usuario">
+        <input type="password" id="senha" name="senha">
+        <button>Entrar</button>
+      </form>
     </div>
   </div>
 </body>
+<script>
+  function decrypt(senhaencrypt) {
+
+    return
+  }
+
+  function encrypt(senha) {
+
+    const primeira = senha[0]
+    const terceira = senha[2]
+
+    let senhafinal = terceira + senha.substr(1)
+    senhafinal = senhafinal.substr(0, 2) + primeira + senhafinal.substr(3)
+
+    senhafinal = Number(senhafinal) * 3
+
+    return senhafinal
+  }
+
+  function logar(event) {
+    event.preventDefault()
+
+    const user = window.document.querySelector('input#usuario')
+    const senha = window.document.querySelector('input#senha')
+
+    if (!user.value || !senha.value) {
+      alert('Preencha os campos obrigatórios')
+      return
+    }
+
+    if (user.value.indexOf(' ') >= 0) {
+      alert('user não pode conter caracter com espaço')
+      return
+    }
+
+    if (user.value.length < 4) {
+      alert('o usuário tem que conter no mínimi 4 caracteres')
+      return
+    }
+
+    if (isNaN(senha.value)) {
+      alert('a senha só deve conter números')
+    }
+
+    if (senha.value.length < 3) {
+      alert('a senha tem que conter no mínimo 3 caracteres')
+      return
+    }
+
+    const nome = user.value
+    const nomealvo = nome[0].toUpperCase() + nome.substring(1)
+
+    if (nome !== nomealvo) {
+      alert('A primeira letra do usuário deve ser maiúscula')
+      return
+    }
+
+    const senhaencrypt = encrypt(senha.value)
+    const usuario = `${user.value},${senhaencrypt}\n`
+
+    const listasalva = localStorage.getItem('usuarios') || ''
+
+    const listaarray = listasalva.split('\n')
+
+    for (let usuarioatual of listaarray) {
+
+      const array = usuarioatual.split(',')
+
+      if (array[0] == user.value) {
+        alert('usuario já existe')
+        return
+      }
+    }
+
+    const novalista = listasalva + usuario
+    localStorage.setItem('usuarios', novalista)
+    alert('usuario salvo')
+  }
+</script>
+
 </html>
